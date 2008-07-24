@@ -1,0 +1,38 @@
+<%
+  url_options = params_for(:action => :list_filter)
+-%>
+<% href = url_for(params_for(:action => :update_table, :escape => false).delete_if{|k,v| k == 'list_filter'}) -%>
+<%= form_remote_tag :url => href,
+                    :method => :get,
+                    :before => "addActiveScaffoldPageToHistory('#{href}', '#{params[:controller]}')",
+                    :after => "$('#{loading_indicator_id(:action => :list_filter, :id => params[:id])}').style.visibility = 'visible';",
+                    :complete => "$('#{loading_indicator_id(:action => :list_filter, :id => params[:id])}').style.visibility = 'hidden';",
+                      :update => active_scaffold_content_id,
+                    :html => { :href => href, :id => list_filter_form_id, :class => 'list_filter' } %>
+
+<h3><%=as_('Filters')%></h3>
+
+<% filter_config.filters.each do |filter|	
+		id = params[:eid] || params[:controller]
+		session_index = "as:#{id}"
+		filter_session = session[session_index]["list_filter"] unless session[session_index]["list_filter"].nil?
+		filter_session = filter_session[filter.filter_type] unless filter_session.nil?
+		filter_session = filter_session[filter.name] unless filter_session.nil?
+%>
+	<label><%=as_(filter.label)%></label>
+	<%= render :partial => filter.filter_type, :locals => { :filter => filter, :filter_session => filter_session } -%>
+<% end %>
+
+<%= hidden_field_tag('list_filter[input]','filter') %>
+
+<a href="#" onclick="$('<%= list_filter_form_id %>').reset();$('<%= list_filter_form_id %>').onsubmit();">Reset</a>
+<%= loading_indicator_tag(:action => :list_filter) %>
+</form>
+<script type="text/javascript">
+//<![CDATA[
+  new Form.EventObserver('<%= list_filter_form_id %>', function(element, value) {
+    if (!$(element.id)) return false; // because the element may have been destroyed
+    $(element).onsubmit();
+  });
+//]]>
+</script>

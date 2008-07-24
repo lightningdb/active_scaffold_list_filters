@@ -1,0 +1,11 @@
+v0.31 (April 8, 2008)
+Fixed small bug in loading the plugin
+
+v0.3 (March 8, 2008)
+Re-factored of how custom filters work.  They are now plugin base and are mix'ed in with the list_filter data type giving far more flexibility.
+
+v0.2 (March 2, 2008)
+* Fixed filters to use per scaffold sessions so they don't interfere with each other.
+
+v0.1 (Feb 28, 2008)
+* Initial Release

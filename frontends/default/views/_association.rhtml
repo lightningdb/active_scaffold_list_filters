@@ -1,0 +1,21 @@
+<%
+	ar_class = filter.association_tree.last.class_name.constantize
+	associated_values = ar_class.find(:all).sort {|a,b| a.to_label <=> b.to_label }
+-%>
+
+<div style='margin-bottom: 1em;'>
+<ol style='width: 100%'>
+<% associated_values.each do |value| -%>
+	<%
+		session_value = nil
+		session_value = filter_session.include? value.id.to_s unless filter_session.nil?
+	-%>
+   	<li style='float: left; width: 20%;'>
+		<%= content_tag(:label, 
+				check_box_tag(list_filter_input_name(filter) + "[]",
+					"#{value.id}",session_value) + "&nbsp;#{value.to_label}") %>
+	</li>
+<% end -%>
+</ol>
+<br style='clear: left;'>
+</div>
